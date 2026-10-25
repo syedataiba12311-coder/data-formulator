@@ -31,6 +31,7 @@ _EXPECTED_HIERARCHIES = {
     "postgresql": ["database", "schema", "table"],
     "mssql": ["database", "schema", "object_type", "table"],
     "bigquery": ["project_id", "dataset_id", "table"],
+    "snowflake": ["database", "schema", "table"],
     "kusto": ["kusto_database", "table"],
     "athena": ["database", "table"],
     "mongodb": ["database", "collection"],
@@ -93,6 +94,7 @@ class TestScopePinningAllLoaders:
         ("postgresql", "database", "database"),
         ("mssql", "database", "database"),
         ("athena", "database", "database"),
+        ("snowflake", "database", "database"),
     ])
     def test_pinning_removes_level(self, loader_key, pin_param, expected_removed):
         """When a hierarchy-level param is provided, that level is pinned out."""
@@ -142,7 +144,7 @@ class TestAuthModes:
     def test_default_auth_mode_is_connection(self):
         """Most loaders use the default 'connection' auth mode."""
         connection_loaders = {"mysql", "clickhouse", "postgresql", "mssql", "bigquery", "kusto",
-                              "athena", "mongodb", "s3", "azure_blob"}
+                              "athena", "mongodb", "s3", "azure_blob", "snowflake"}
         for key, cls in _get_available_loaders().items():
             if key in connection_loaders:
                 assert cls.auth_mode() == "connection", f"{key}: expected 'connection'"
